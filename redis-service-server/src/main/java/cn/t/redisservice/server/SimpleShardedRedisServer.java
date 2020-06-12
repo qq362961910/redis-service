@@ -2,7 +2,7 @@ package cn.t.redisservice.server;
 
 import cn.t.redisservice.server.sharded.event.NodeAddedEvent;
 import cn.t.redisservice.server.sharded.event.ShardedEvent;
-import cn.t.redisservice.server.sharded.handler.EventHandleUtil;
+import cn.t.redisservice.server.sharded.handler.ShardedEventHandleUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,32 +17,30 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
 
     @Override
     public String get(String key) {
-        if(!belongsToMe(key)) {
-            return null;
+        if(belongsToMe(key)) {
+            return database.get(key);
         }
-        return database.get(key);
+        return null;
     }
 
     @Override
     public void set(String key, String value) {
-        if(!belongsToMe(key)) {
-            return;
+        if(belongsToMe(key)) {
+            database.put(key, value);
         }
-        database.put(key, value);
     }
 
     @Override
     public void remove(String key) {
-        if(!belongsToMe(key)) {
-            return;
+        if(belongsToMe(key)) {
+            database.remove(key);
         }
-        database.remove(key);
     }
 
     @Override
     public void onEvent(ShardedEvent shardedEvent) {
         if(shardedEvent instanceof NodeAddedEvent) {
-            EventHandleUtil.handleEvent((NodeAddedEvent)shardedEvent, this);
+            ShardedEventHandleUtil.handleEvent((NodeAddedEvent)shardedEvent, this);
         } else {
             throw new RuntimeException("未处理的事件类型");
         }

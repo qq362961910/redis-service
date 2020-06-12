@@ -8,19 +8,25 @@ import cn.t.redisservice.server.ShardedRedisServer;
  **/
 public class NodeAddedEvent implements ShardedEvent {
 
+    private final int nextServerIndex;
     private final int totalServerCount;
     private final ShardedRedisServer shardedRedisServer;
 
-    @Override
-    public ShardedRedisServer getSourceServer() {
-        return shardedRedisServer;
+    public int getNextServerIndex() {
+        return nextServerIndex;
     }
 
     public int getTotalServerCount() {
         return totalServerCount;
     }
 
-    public NodeAddedEvent(int totalServerCount, ShardedRedisServer shardedRedisServer) {
+    @Override
+    public ShardedRedisServer getSourceServer() {
+        return shardedRedisServer;
+    }
+
+    public NodeAddedEvent(int nextServerIndex, int totalServerCount, ShardedRedisServer shardedRedisServer) {
+        this.nextServerIndex = nextServerIndex;
         this.totalServerCount = totalServerCount;
         this.shardedRedisServer = shardedRedisServer;
     }
