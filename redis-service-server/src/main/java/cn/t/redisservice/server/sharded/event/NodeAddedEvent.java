@@ -8,14 +8,20 @@ import cn.t.redisservice.server.ShardedRedisServer;
  **/
 public class NodeAddedEvent implements ShardedEvent {
 
-    private final ShardedRedisServer shardedRedisServer;
+    private final int hashEnd;
+    private final ShardedRedisServer sourceServer;
 
     @Override
     public ShardedRedisServer getSourceServer() {
-        return shardedRedisServer;
+        return sourceServer;
     }
 
-    public NodeAddedEvent(ShardedRedisServer shardedRedisServer) {
-        this.shardedRedisServer = shardedRedisServer;
+    public int getHashEnd() {
+        return hashEnd;
+    }
+
+    public NodeAddedEvent(int hashEnd, ShardedRedisServer sourceServer) {
+        this.hashEnd = hashEnd;
+        this.sourceServer = sourceServer;
     }
 }
