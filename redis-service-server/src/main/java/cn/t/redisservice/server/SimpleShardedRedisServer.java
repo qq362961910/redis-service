@@ -1,8 +1,10 @@
 package cn.t.redisservice.server;
 
 import cn.t.redisservice.server.sharded.event.NodeAddedEvent;
+import cn.t.redisservice.server.sharded.event.NodeRemovedEvent;
 import cn.t.redisservice.server.sharded.event.ShardedEvent;
 import cn.t.redisservice.server.sharded.handler.ShardedEventHandleUtil;
+import cn.t.util.common.CollectionUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +42,11 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
     }
 
     @Override
+    public int size() {
+        return database.size();
+    }
+
+    @Override
     public Set<String> allKeys() {
         return database.keySet();
     }
@@ -50,15 +57,26 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
     }
 
     @Override
+    public void addAll(Set<Map.Entry<String, String>> set) {
+        if(!CollectionUtil.isEmpty(set)) {
+            for(Map.Entry<String, String> entry: set) {
+                database.put(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    @Override
     public void onEvent(ShardedEvent shardedEvent) {
         if(shardedEvent instanceof NodeAddedEvent) {
+            ShardedEventHandleUtil.handleEvent((NodeAddedEvent)shardedEvent, this);
+        } else if(shardedEvent instanceof NodeRemovedEvent) {
             ShardedEventHandleUtil.handleEvent((NodeAddedEvent)shardedEvent, this);
         } else {
             throw new RuntimeException("未处理的事件类型");
         }
     }
 
-    public SimpleShardedRedisServer(int id, TreeMap<Integer, Integer> hashRangeServerIdMap) {
-        super(id, hashRangeServerIdMap);
+    public SimpleShardedRedisServer(int id, int hashEnd, TreeMap<Integer, Integer> hashRangeServerIdMap) {
+        super(id, hashEnd, hashRangeServerIdMap);
     }
 }
