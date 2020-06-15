@@ -45,6 +45,11 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
     }
 
     @Override
+    public Set<Map.Entry<String, String>> dump() {
+        return database.entrySet();
+    }
+
+    @Override
     public void onEvent(ShardedEvent shardedEvent) {
         if(shardedEvent instanceof NodeAddedEvent) {
             ShardedEventHandleUtil.handleEvent((NodeAddedEvent)shardedEvent, this);

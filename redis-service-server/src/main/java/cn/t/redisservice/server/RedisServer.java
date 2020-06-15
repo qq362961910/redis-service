@@ -1,5 +1,6 @@
 package cn.t.redisservice.server;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface RedisServer {
@@ -8,4 +9,5 @@ public interface RedisServer {
     void set(String key, String value);
     void remove(String key);
     Set<String> allKeys();
+    Set<Map.Entry<String, String>> dump();
 }
