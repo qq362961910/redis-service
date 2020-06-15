@@ -38,4 +38,9 @@ public abstract class ShardedRedisServer extends AbstractRedisServer {
         this.hashEnd = hashEnd;
         this.hashRangeServerIdMap = hashRangeServerIdMap;
     }
+
+    @Override
+    public String toString() {
+        return String.format("分片redis-server: id: %d, hashEnd: %d, size: %d", id, hashEnd, size());
+    }
 }
