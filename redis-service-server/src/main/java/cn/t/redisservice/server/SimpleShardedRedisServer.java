@@ -6,6 +6,8 @@ import cn.t.redisservice.server.sharded.handler.ShardedEventHandleUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * @author yj
@@ -38,6 +40,11 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
     }
 
     @Override
+    public Set<String> allKeys() {
+        return database.keySet();
+    }
+
+    @Override
     public void onEvent(ShardedEvent shardedEvent) {
         if(shardedEvent instanceof NodeAddedEvent) {
             ShardedEventHandleUtil.handleEvent((NodeAddedEvent)shardedEvent, this);
@@ -46,7 +53,7 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
         }
     }
 
-    public SimpleShardedRedisServer(int index, int totalServerCount) {
-        super(index, totalServerCount);
+    public SimpleShardedRedisServer(int id, TreeMap<Integer, Integer> hashRangeServerIdMap) {
+        super(id, hashRangeServerIdMap);
     }
 }
