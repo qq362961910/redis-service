@@ -11,6 +11,7 @@
         <module>redis-service-client</module>
         <module>redis-service-server</module>
         <module>redis-service-common</module>
+        <module>redis-service-demo</module>
     </modules>
     <packaging>pom</packaging>
 
