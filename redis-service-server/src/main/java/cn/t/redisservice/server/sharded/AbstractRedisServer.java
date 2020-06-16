@@ -1,6 +1,6 @@
 package cn.t.redisservice.server.sharded;
 
-import cn.t.redisservice.server.RedisServer;
+import cn.t.redisservice.common.RedisServer;
 
 /**
  * @author yj

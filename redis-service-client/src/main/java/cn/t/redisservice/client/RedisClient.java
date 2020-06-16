@@ -1,5 +1,7 @@
 package cn.t.redisservice.client;
 
 public interface RedisClient {
-    void connect(String host, short port);
+    String get(String key);
+    void set(String key, String value);
+    void remove(String key);
 }

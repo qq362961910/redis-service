@@ -12,4 +12,10 @@
     <artifactId>redis-service-client</artifactId>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.t</groupId>
+            <artifactId>redis-service-common</artifactId>
+        </dependency>
+    </dependencies>
 </project>

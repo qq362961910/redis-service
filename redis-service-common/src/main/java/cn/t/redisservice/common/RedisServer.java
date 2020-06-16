@@ -1,4 +1,4 @@
-package cn.t.redisservice.server;
+package cn.t.redisservice.common;
 
 import java.util.Map;
 import java.util.Set;

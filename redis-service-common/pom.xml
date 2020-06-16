@@ -12,5 +12,4 @@
     <artifactId>redis-service-common</artifactId>
     <packaging>jar</packaging>
 
-
 </project>
