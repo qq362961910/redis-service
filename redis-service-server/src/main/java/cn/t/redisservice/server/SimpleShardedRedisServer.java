@@ -70,7 +70,7 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
         if(shardedEvent instanceof NodeAddedEvent) {
             ShardedEventHandleUtil.handleEvent((NodeAddedEvent)shardedEvent, this);
         } else if(shardedEvent instanceof NodeRemovedEvent) {
-            ShardedEventHandleUtil.handleEvent((NodeAddedEvent)shardedEvent, this);
+            ShardedEventHandleUtil.handleEvent((NodeRemovedEvent)shardedEvent, this);
         } else {
             throw new RuntimeException("未处理的事件类型");
         }
