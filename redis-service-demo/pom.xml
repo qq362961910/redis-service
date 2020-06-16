@@ -11,7 +11,6 @@
 
     <artifactId>redis-service-demo</artifactId>
 
-
     <dependencies>
         <dependency>
             <groupId>cn.t</groupId>

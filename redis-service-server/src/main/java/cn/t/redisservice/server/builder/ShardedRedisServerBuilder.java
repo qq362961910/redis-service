@@ -13,8 +13,7 @@ import java.util.TreeMap;
  **/
 public class ShardedRedisServerBuilder {
     public static List<ShardedRedisServer> build(int quantity) {
-//        int maxHash = Integer.MAX_VALUE;
-        int maxHash = 1000;
+        int maxHash = Integer.MAX_VALUE;
         int unit = maxHash / quantity;
         int remain = maxHash % quantity;
         List<ShardedRedisServer> shardedRedisServerList = new ArrayList<>();
