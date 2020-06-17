@@ -21,16 +21,21 @@ public class ShardedRedisServerBuilder {
         for(int i=1; i<quantity; i++) {
             int id = i;
             int hashEnd = i * unit;
-            hashRangeServerIdMap.put(hashEnd, id);
-            SimpleShardedRedisServer redisServer = new SimpleShardedRedisServer(id, hashEnd, hashRangeServerIdMap);
-            shardedRedisServerList.add(redisServer);
+            addSimpleShardedRedisServer(id, hashEnd, shardedRedisServerList, hashRangeServerIdMap);
         }
         if(remain > 0) {
             int id = quantity;
             int hashEnd = maxHash;
-            SimpleShardedRedisServer redisServer = new SimpleShardedRedisServer(id, hashEnd, hashRangeServerIdMap);
-            shardedRedisServerList.add(redisServer);
+            addSimpleShardedRedisServer(id, hashEnd, shardedRedisServerList, hashRangeServerIdMap);
+        }
+        for(ShardedRedisServer server: shardedRedisServerList) {
+            server.initializeCluster(hashRangeServerIdMap);
         }
         return shardedRedisServerList;
+    }
+    private static void addSimpleShardedRedisServer(int id, int hashEnd, List<ShardedRedisServer> shardedRedisServerList, TreeMap<Integer, Integer> hashRangeServerIdMap) {
+        hashRangeServerIdMap.put(hashEnd, id);
+        SimpleShardedRedisServer redisServer = new SimpleShardedRedisServer(id, hashEnd);
+        shardedRedisServerList.add(redisServer);
     }
 }

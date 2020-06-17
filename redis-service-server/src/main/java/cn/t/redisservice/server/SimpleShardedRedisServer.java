@@ -5,6 +5,8 @@ import cn.t.redisservice.server.sharded.event.NodeRemovedEvent;
 import cn.t.redisservice.server.sharded.event.ShardedEvent;
 import cn.t.redisservice.server.sharded.handler.ShardedEventHandleUtil;
 import cn.t.util.common.CollectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +18,8 @@ import java.util.TreeMap;
  * @since 2020-06-11 19:12
  **/
 public class SimpleShardedRedisServer extends ShardedRedisServer {
+
+    private static final Logger logger = LoggerFactory.getLogger(SimpleShardedRedisServer.class);
 
     private final Map<String, String> database = new HashMap<>();
 
@@ -30,7 +34,7 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
     @Override
     public void set(String key, String value) {
         if(belongsToMe(key)) {
-            System.out.println(String.format("set %s, serverId: %d, hashEnd: %d", key, getId(), hashEnd));
+            logger.info("set {}}, serverId: {}, hashEnd: {}", key, getId(), hashEnd);
             database.put(key, value);
         }
     }
@@ -75,6 +79,10 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
         } else {
             throw new RuntimeException("未处理的事件类型");
         }
+    }
+
+    public SimpleShardedRedisServer(int id, int hashEnd) {
+        super(id, hashEnd, null);
     }
 
     public SimpleShardedRedisServer(int id, int hashEnd, TreeMap<Integer, Integer> hashRangeServerIdMap) {

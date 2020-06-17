@@ -45,7 +45,10 @@ public class ShardedEventHandleUtil {
         TreeMap<Integer, Integer> hashRangeServerIdMap = server.getHashRangeServerIdMap();
         hashRangeServerIdMap.remove(eventSourceServer.getHashEnd());
         if(eventSourceServer.size() > 0) {
-            Map.Entry<Integer, Integer> entry = hashRangeServerIdMap.higherEntry(eventSourceServer.getId());
+            Map.Entry<Integer, Integer> entry = hashRangeServerIdMap.higherEntry(eventSourceServer.getHashEnd());
+            if(entry == null) {
+                entry = hashRangeServerIdMap.firstEntry();
+            }
             //数据向后迁移
             if(entry != null && server.getId() == entry.getValue()) {
                 logger.info("移除节点, server: [{}]数据即将开始向后迁移, target server: [{}], 数据总量: {}", eventSourceServer.getId(), server.getId(), eventSourceServer.size());

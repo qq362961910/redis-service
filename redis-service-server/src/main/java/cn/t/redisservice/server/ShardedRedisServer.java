@@ -3,6 +3,7 @@ package cn.t.redisservice.server;
 import cn.t.redisservice.common.util.KeyUtil;
 import cn.t.redisservice.server.sharded.AbstractRedisServer;
 import cn.t.redisservice.server.sharded.event.ShardedEvent;
+import cn.t.util.common.CollectionUtil;
 
 import java.util.TreeMap;
 
@@ -16,6 +17,12 @@ public abstract class ShardedRedisServer extends AbstractRedisServer {
     protected final int hashEnd;
     //hashRange -> serverId map
     protected final TreeMap<Integer, Integer> hashRangeServerIdMap = new TreeMap<>();
+
+    public void initializeCluster(TreeMap<Integer, Integer> hashRangeServerIdMap) {
+        if(!CollectionUtil.isEmpty(hashRangeServerIdMap)) {
+            this.hashRangeServerIdMap.putAll(hashRangeServerIdMap);
+        }
+    }
 
     public abstract void onEvent(ShardedEvent shardedEvent);
 
@@ -36,7 +43,9 @@ public abstract class ShardedRedisServer extends AbstractRedisServer {
     public ShardedRedisServer(int id, int hashEnd, TreeMap<Integer, Integer> hashRangeServerIdMap) {
         super(id);
         this.hashEnd = hashEnd;
-        this.hashRangeServerIdMap.putAll(hashRangeServerIdMap);
+        if(!CollectionUtil.isEmpty(hashRangeServerIdMap)) {
+            this.hashRangeServerIdMap.putAll(hashRangeServerIdMap);
+        }
     }
 
     @Override
