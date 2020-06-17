@@ -21,7 +21,7 @@ public class ShardedRedisServerBuilder {
         //添加物理节点
         addPhysicalNodes(quantity, minHash, maxHash, shardedRedisServerList, hashRangeServerIdMap);
         //添加虚拟节点
-        addVirtualNodes(hashRangeServerIdMap, 6, minHash);
+//        addVirtualNodes(hashRangeServerIdMap, 6, minHash);
         for(ShardedRedisServer server: shardedRedisServerList) {
             server.initializeCluster(hashRangeServerIdMap);
         }
