@@ -13,9 +13,9 @@ import java.util.TreeMap;
  **/
 public abstract class ShardedRedisServer extends AbstractRedisServer {
 
-    private final int hashEnd;
+    protected final int hashEnd;
     //hashRange -> serverId map
-    private final TreeMap<Integer, Integer> hashRangeServerIdMap;
+    protected final TreeMap<Integer, Integer> hashRangeServerIdMap;
 
     public abstract void onEvent(ShardedEvent shardedEvent);
 

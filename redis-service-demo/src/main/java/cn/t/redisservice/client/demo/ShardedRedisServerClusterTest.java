@@ -21,8 +21,8 @@ public class ShardedRedisServerClusterTest {
             hashRangeServerIdMap.put(server.getHashEnd(), server);
         }
         ShardedRedisServerClusterClient client = new ShardedRedisServerClusterClient(hashRangeServerIdMap);
-        for(int i=0; i< 10000; i++) {
-            client.set(RandomUtil.randomString(100), String.valueOf(i));
+        for(int i=0; i< 1000; i++) {
+            client.set(RandomUtil.randomString(10), String.valueOf(i));
         }
         for(ShardedRedisServer server: shardedRedisServerList) {
             System.out.println(server);

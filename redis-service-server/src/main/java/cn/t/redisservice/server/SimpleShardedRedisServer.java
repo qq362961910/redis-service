@@ -30,6 +30,7 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
     @Override
     public void set(String key, String value) {
         if(belongsToMe(key)) {
+            System.out.println(String.format("set %s, serverId: %d, hashEnd: %d", key, getId(), hashEnd));
             database.put(key, value);
         }
     }
