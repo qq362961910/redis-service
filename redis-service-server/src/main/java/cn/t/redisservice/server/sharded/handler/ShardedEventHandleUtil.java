@@ -47,7 +47,7 @@ public class ShardedEventHandleUtil {
         if(eventSourceServer.size() > 0) {
             Map.Entry<Integer, Integer> entry = hashRangeServerIdMap.higherEntry(eventSourceServer.getId());
             //数据向后迁移
-            if(entry != null) {
+            if(entry != null && server.getId() == entry.getValue()) {
                 logger.info("移除节点, server: [{}]数据即将开始向后迁移, target server: [{}], 数据总量: {}", eventSourceServer.getId(), server.getId(), eventSourceServer.size());
                 server.addAll(eventSourceServer.dump());
             }

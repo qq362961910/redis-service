@@ -15,7 +15,7 @@ public abstract class ShardedRedisServer extends AbstractRedisServer {
 
     protected final int hashEnd;
     //hashRange -> serverId map
-    protected final TreeMap<Integer, Integer> hashRangeServerIdMap;
+    protected final TreeMap<Integer, Integer> hashRangeServerIdMap = new TreeMap<>();
 
     public abstract void onEvent(ShardedEvent shardedEvent);
 
@@ -36,7 +36,7 @@ public abstract class ShardedRedisServer extends AbstractRedisServer {
     public ShardedRedisServer(int id, int hashEnd, TreeMap<Integer, Integer> hashRangeServerIdMap) {
         super(id);
         this.hashEnd = hashEnd;
-        this.hashRangeServerIdMap = hashRangeServerIdMap;
+        this.hashRangeServerIdMap.putAll(hashRangeServerIdMap);
     }
 
     @Override
