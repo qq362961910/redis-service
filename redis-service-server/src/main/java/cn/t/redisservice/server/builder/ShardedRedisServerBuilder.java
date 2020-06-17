@@ -5,6 +5,7 @@ import cn.t.redisservice.server.SimpleShardedRedisServer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -20,10 +21,34 @@ public class ShardedRedisServerBuilder {
         //添加物理节点
         addPhysicalNodes(quantity, minHash, maxHash, shardedRedisServerList, hashRangeServerIdMap);
         //添加虚拟节点
+        addVirtualNodes(hashRangeServerIdMap, 6, minHash);
         for(ShardedRedisServer server: shardedRedisServerList) {
             server.initializeCluster(hashRangeServerIdMap);
         }
         return shardedRedisServerList;
+    }
+
+    public static void addVirtualNodes(TreeMap<Integer, Integer> hashRangeServerIdMap, int split, int minHash) {
+        int splitToUse = Math.abs(split);
+        int hashBegin = minHash;
+        Map<Integer, Integer> virtualNodes = new TreeMap<>();
+        for(Map.Entry<Integer, Integer> entry: hashRangeServerIdMap.entrySet()) {
+            int hashEnd = entry.getKey();
+            int difference = hashEnd - hashBegin + 1;
+            int unit = difference / splitToUse;
+            int forwardHashEnd = hashEnd;
+            for(int i=1; i<splitToUse; i++) {
+                Map.Entry<Integer, Integer> hashRangeServerEntry = hashRangeServerIdMap.higherEntry(forwardHashEnd);
+                if(hashRangeServerEntry == null) {
+                    hashRangeServerEntry = hashRangeServerIdMap.firstEntry();
+                }
+                hashEnd = hashEnd - unit;
+                virtualNodes.put(hashEnd, hashRangeServerEntry.getValue());
+                forwardHashEnd = hashRangeServerEntry.getKey();
+            }
+            hashBegin = entry.getKey() + 1;
+        }
+        hashRangeServerIdMap.putAll(virtualNodes);
     }
 
     public static void addPhysicalNodes(int quantity, int minHash, int maxHash, List<ShardedRedisServer> shardedRedisServerList, TreeMap<Integer, Integer> hashRangeServerIdMap) {
