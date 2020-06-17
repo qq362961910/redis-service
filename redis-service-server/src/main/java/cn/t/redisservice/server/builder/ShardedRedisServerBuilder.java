@@ -19,14 +19,11 @@ public class ShardedRedisServerBuilder {
         List<ShardedRedisServer> shardedRedisServerList = new ArrayList<>();
         TreeMap<Integer, Integer> hashRangeServerIdMap = new TreeMap<>();
         for(int i=1; i<quantity; i++) {
-            int id = i;
             int hashEnd = i * unit;
-            addSimpleShardedRedisServer(id, hashEnd, shardedRedisServerList, hashRangeServerIdMap);
+            addSimpleShardedRedisServer(i, hashEnd, shardedRedisServerList, hashRangeServerIdMap);
         }
         if(remain > 0) {
-            int id = quantity;
-            int hashEnd = maxHash;
-            addSimpleShardedRedisServer(id, hashEnd, shardedRedisServerList, hashRangeServerIdMap);
+            addSimpleShardedRedisServer(quantity, maxHash, shardedRedisServerList, hashRangeServerIdMap);
         }
         for(ShardedRedisServer server: shardedRedisServerList) {
             server.initializeCluster(hashRangeServerIdMap);
