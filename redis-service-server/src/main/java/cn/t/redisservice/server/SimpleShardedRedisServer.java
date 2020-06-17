@@ -1,5 +1,6 @@
 package cn.t.redisservice.server;
 
+import cn.t.redisservice.common.util.KeyUtil;
 import cn.t.redisservice.server.sharded.event.NodeAddedEvent;
 import cn.t.redisservice.server.sharded.event.NodeRemovedEvent;
 import cn.t.redisservice.server.sharded.event.ShardedEvent;
@@ -34,7 +35,7 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
     @Override
     public void set(String key, String value) {
         if(belongsToMe(key)) {
-            logger.info("set {}}, serverId: {}, hashEnd: {}", key, getId(), hashEnd);
+            logger.info("set {}, keyHash: {}, serverId: {}, hashEnd: {}", key, KeyUtil.hashKey(key), getId(), hashEnd);
             database.put(key, value);
         }
     }
