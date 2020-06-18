@@ -12,10 +12,8 @@ import java.util.TreeMap;
  * @author yj
  * @since 2020-06-15 19:40
  **/
-public class ShardedRedisServerBuilder {
-    public static List<ShardedRedisServer> build(int quantity) {
-        int minHash = Integer.MIN_VALUE;
-        int maxHash = Integer.MAX_VALUE;
+public class ShardedRedisServerUtil {
+    public static List<ShardedRedisServer> buildCluster(int minHash, int maxHash, int quantity) {
         List<ShardedRedisServer> shardedRedisServerList = new ArrayList<>();
         TreeMap<Integer, ShardedRedisServer> hashRangeServerMap = new TreeMap<>();
         //添加物理节点

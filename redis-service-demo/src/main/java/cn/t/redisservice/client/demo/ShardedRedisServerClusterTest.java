@@ -3,7 +3,7 @@ package cn.t.redisservice.client.demo;
 import cn.t.redisservice.client.ShardedRedisServerClusterClient;
 import cn.t.redisservice.common.RedisServer;
 import cn.t.redisservice.server.ShardedRedisServer;
-import cn.t.redisservice.server.builder.ShardedRedisServerBuilder;
+import cn.t.redisservice.server.builder.ShardedRedisServerUtil;
 import cn.t.redisservice.server.sharded.event.NodeRemovedEvent;
 import cn.t.util.common.RandomUtil;
 
@@ -16,8 +16,10 @@ import java.util.TreeMap;
  **/
 public class ShardedRedisServerClusterTest {
     public static void main(String[] args) {
+        int minHash = Integer.MIN_VALUE;
+        int maxHash = Integer.MAX_VALUE;
         //构建分片集群
-        List<ShardedRedisServer> shardedRedisServerList = ShardedRedisServerBuilder.build(6);
+        List<ShardedRedisServer> shardedRedisServerList = ShardedRedisServerUtil.buildCluster(minHash, maxHash, 6);
         //构建客户端
         TreeMap<Integer, RedisServer> hashRangeServerMap = new TreeMap<>();
         for(ShardedRedisServer server: shardedRedisServerList) {
@@ -38,6 +40,9 @@ public class ShardedRedisServerClusterTest {
         }
         //打印集群分片信息
         echoClusterInfo(shardedRedisServerList);
+
+        //新增分片
+
     }
 
     private static void echoClusterInfo(List<ShardedRedisServer> shardedRedisServerList) {
