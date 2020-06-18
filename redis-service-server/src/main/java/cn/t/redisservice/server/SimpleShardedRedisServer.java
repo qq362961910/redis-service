@@ -86,7 +86,7 @@ public class SimpleShardedRedisServer extends ShardedRedisServer {
         super(id, hashEnd, null);
     }
 
-    public SimpleShardedRedisServer(int id, int hashEnd, TreeMap<Integer, Integer> hashRangeServerIdMap) {
-        super(id, hashEnd, hashRangeServerIdMap);
+    public SimpleShardedRedisServer(int id, int hashEnd, TreeMap<Integer, ShardedRedisServer> hashRangeServerMap) {
+        super(id, hashEnd, hashRangeServerMap);
     }
 }

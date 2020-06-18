@@ -19,11 +19,11 @@ public class ShardedRedisServerClusterTest {
         //构建分片集群
         List<ShardedRedisServer> shardedRedisServerList = ShardedRedisServerBuilder.build(6);
         //构建客户端
-        TreeMap<Integer, RedisServer> hashRangeServerIdMap = new TreeMap<>();
+        TreeMap<Integer, RedisServer> hashRangeServerMap = new TreeMap<>();
         for(ShardedRedisServer server: shardedRedisServerList) {
-            hashRangeServerIdMap.put(server.getHashEnd(), server);
+            hashRangeServerMap.put(server.getHashEnd(), server);
         }
-        ShardedRedisServerClusterClient client = new ShardedRedisServerClusterClient(hashRangeServerIdMap);
+        ShardedRedisServerClusterClient client = new ShardedRedisServerClusterClient(hashRangeServerMap);
         for(int i=0; i< 1000; i++) {
             client.set(RandomUtil.randomString(10), String.valueOf(i));
         }

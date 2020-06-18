@@ -17,30 +17,30 @@ public class ShardedRedisServerBuilder {
         int minHash = Integer.MIN_VALUE;
         int maxHash = Integer.MAX_VALUE;
         List<ShardedRedisServer> shardedRedisServerList = new ArrayList<>();
-        TreeMap<Integer, Integer> hashRangeServerIdMap = new TreeMap<>();
+        TreeMap<Integer, ShardedRedisServer> hashRangeServerMap = new TreeMap<>();
         //添加物理节点
-        addPhysicalNodes(quantity, minHash, maxHash, shardedRedisServerList, hashRangeServerIdMap);
+        addPhysicalNodes(quantity, minHash, maxHash, shardedRedisServerList, hashRangeServerMap);
         //添加虚拟节点
-//        addVirtualNodes(hashRangeServerIdMap, 6, minHash);
+//        addVirtualNodes(hashRangeServerMap, 6, minHash);
         for(ShardedRedisServer server: shardedRedisServerList) {
-            server.initializeCluster(hashRangeServerIdMap);
+            server.initializeCluster(hashRangeServerMap);
         }
         return shardedRedisServerList;
     }
 
-    public static void addVirtualNodes(TreeMap<Integer, Integer> hashRangeServerIdMap, int split, int minHash) {
+    public static void addVirtualNodes(TreeMap<Integer, Integer> hashRangeServerMap, int split, int minHash) {
         int splitToUse = Math.abs(split);
         int hashBegin = minHash;
         Map<Integer, Integer> virtualNodes = new TreeMap<>();
-        for(Map.Entry<Integer, Integer> entry: hashRangeServerIdMap.entrySet()) {
+        for(Map.Entry<Integer, Integer> entry: hashRangeServerMap.entrySet()) {
             int hashEnd = entry.getKey();
             int difference = hashEnd - hashBegin + 1;
             int unit = difference / splitToUse;
             int forwardHashEnd = hashEnd;
             for(int i=1; i<splitToUse; i++) {
-                Map.Entry<Integer, Integer> hashRangeServerEntry = hashRangeServerIdMap.higherEntry(forwardHashEnd);
+                Map.Entry<Integer, Integer> hashRangeServerEntry = hashRangeServerMap.higherEntry(forwardHashEnd);
                 if(hashRangeServerEntry == null) {
-                    hashRangeServerEntry = hashRangeServerIdMap.firstEntry();
+                    hashRangeServerEntry = hashRangeServerMap.firstEntry();
                 }
                 hashEnd = hashEnd - unit;
                 virtualNodes.put(hashEnd, hashRangeServerEntry.getValue());
@@ -48,10 +48,10 @@ public class ShardedRedisServerBuilder {
             }
             hashBegin = entry.getKey() + 1;
         }
-        hashRangeServerIdMap.putAll(virtualNodes);
+        hashRangeServerMap.putAll(virtualNodes);
     }
 
-    public static void addPhysicalNodes(int quantity, int minHash, int maxHash, List<ShardedRedisServer> shardedRedisServerList, TreeMap<Integer, Integer> hashRangeServerIdMap) {
+    public static void addPhysicalNodes(int quantity, int minHash, int maxHash, List<ShardedRedisServer> shardedRedisServerList, TreeMap<Integer, ShardedRedisServer> hashRangeServerMap) {
         long minHashToUse = minHash;
         long maxHashToUse = maxHash;
         long difference = maxHashToUse - minHashToUse;
@@ -59,16 +59,16 @@ public class ShardedRedisServerBuilder {
         long remain = difference % quantity;
         for(int i=1; i<quantity; i++) {
             int hashEnd = (int)(minHashToUse + (i * unit));
-            addSimpleShardedRedisServer(i, hashEnd, shardedRedisServerList, hashRangeServerIdMap);
+            addSimpleShardedRedisServer(i, hashEnd, shardedRedisServerList, hashRangeServerMap);
         }
         if(remain != 0) {
-            addSimpleShardedRedisServer(quantity, maxHash, shardedRedisServerList, hashRangeServerIdMap);
+            addSimpleShardedRedisServer(quantity, maxHash, shardedRedisServerList, hashRangeServerMap);
         }
     }
 
-    private static void addSimpleShardedRedisServer(int id, int hashEnd, List<ShardedRedisServer> shardedRedisServerList, TreeMap<Integer, Integer> hashRangeServerIdMap) {
-        hashRangeServerIdMap.put(hashEnd, id);
+    private static void addSimpleShardedRedisServer(int id, int hashEnd, List<ShardedRedisServer> shardedRedisServerList, TreeMap<Integer, ShardedRedisServer> hashRangeServerMap) {
         SimpleShardedRedisServer redisServer = new SimpleShardedRedisServer(id, hashEnd);
+        hashRangeServerMap.put(hashEnd, redisServer);
         shardedRedisServerList.add(redisServer);
     }
 }

@@ -12,7 +12,7 @@ import java.util.TreeMap;
 public class ShardedRedisServerClusterClient implements RedisClient {
 
     //hashRange -> server
-    private final TreeMap<Integer, RedisServer> hashRangeServerIdMap;
+    private final TreeMap<Integer, RedisServer> hashRangeServerMap;
 
     @Override
     public String get(String key) {
@@ -31,10 +31,10 @@ public class ShardedRedisServerClusterClient implements RedisClient {
 
     private RedisServer getKeyServer(String key) {
         int hash = KeyUtil.hashKey(key);
-        return hashRangeServerIdMap.higherEntry(hash).getValue();
+        return hashRangeServerMap.higherEntry(hash).getValue();
     }
 
-    public ShardedRedisServerClusterClient(TreeMap<Integer, RedisServer> hashRangeServerIdMap) {
-        this.hashRangeServerIdMap = hashRangeServerIdMap;
+    public ShardedRedisServerClusterClient(TreeMap<Integer, RedisServer> hashRangeServerMap) {
+        this.hashRangeServerMap = hashRangeServerMap;
     }
 }

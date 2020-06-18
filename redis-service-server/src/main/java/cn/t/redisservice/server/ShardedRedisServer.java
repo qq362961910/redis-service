@@ -15,12 +15,12 @@ import java.util.TreeMap;
 public abstract class ShardedRedisServer extends AbstractRedisServer {
 
     protected final int hashEnd;
-    //hashRange -> serverId map
-    protected final TreeMap<Integer, Integer> hashRangeServerIdMap = new TreeMap<>();
+    //hashRange -> server map
+    protected final TreeMap<Integer, ShardedRedisServer> hashRangeServerMap = new TreeMap<>();
 
-    public void initializeCluster(TreeMap<Integer, Integer> hashRangeServerIdMap) {
-        if(!CollectionUtil.isEmpty(hashRangeServerIdMap)) {
-            this.hashRangeServerIdMap.putAll(hashRangeServerIdMap);
+    public void initializeCluster(TreeMap<Integer, ShardedRedisServer> hashRangeServerMap) {
+        if(!CollectionUtil.isEmpty(hashRangeServerMap)) {
+            this.hashRangeServerMap.putAll(hashRangeServerMap);
         }
     }
 
@@ -31,8 +31,8 @@ public abstract class ShardedRedisServer extends AbstractRedisServer {
         return hash < hashEnd;
     }
 
-    public TreeMap<Integer, Integer> getHashRangeServerIdMap() {
-        return hashRangeServerIdMap;
+    public TreeMap<Integer, ShardedRedisServer> getHashRangeServerMap() {
+        return hashRangeServerMap;
     }
 
 
@@ -40,16 +40,16 @@ public abstract class ShardedRedisServer extends AbstractRedisServer {
         return hashEnd;
     }
 
-    public ShardedRedisServer(int id, int hashEnd, TreeMap<Integer, Integer> hashRangeServerIdMap) {
+    public ShardedRedisServer(int id, int hashEnd, TreeMap<Integer, ShardedRedisServer> hashRangeServerMap) {
         super(id);
         this.hashEnd = hashEnd;
-        if(!CollectionUtil.isEmpty(hashRangeServerIdMap)) {
-            this.hashRangeServerIdMap.putAll(hashRangeServerIdMap);
+        if(!CollectionUtil.isEmpty(hashRangeServerMap)) {
+            this.hashRangeServerMap.putAll(hashRangeServerMap);
         }
     }
 
     @Override
     public String toString() {
-        return String.format("分片redis-server: id: %d, hashEnd: %d, size: %d", id, hashEnd, size());
+        return String.format("sharded-redis-server: id: %d, hashEnd: %d, size: %d", id, hashEnd, size());
     }
 }
