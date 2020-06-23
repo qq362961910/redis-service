@@ -40,9 +40,10 @@ public class ShardedRedisServerClusterTest {
         }
         //打印集群分片信息
         echoClusterInfo(shardedRedisServerList);
-
         //新增分片
-
+        ShardedRedisServerUtil.addNode(minHash, shardedRedisServerList);
+        //打印集群分片信息
+        echoClusterInfo(shardedRedisServerList);
     }
 
     private static void echoClusterInfo(List<ShardedRedisServer> shardedRedisServerList) {
